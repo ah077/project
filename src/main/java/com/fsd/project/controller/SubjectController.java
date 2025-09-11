@@ -1,5 +1,6 @@
 package com.fsd.project.controller;
 
+import com.fsd.project.dto.SubjectDTO;
 import com.fsd.project.model.Subject;
 import com.fsd.project.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,31 +18,17 @@ public class SubjectController {
     private SubjectService subjectService;
 
     @GetMapping
-    public List<Subject> getAllSubjects() {
+    public List<Subject> getAll() {
         return subjectService.getAllSubjects();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Subject> getSubjectById(@PathVariable Long id) {
-        Subject subject = subjectService.getSubjectById(id);
-        return ResponseEntity.ok(subject);
+    public ResponseEntity<Subject> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(subjectService.getSubjectById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Subject> createSubject(@RequestBody Subject subject) {
-        Subject createdSubject = subjectService.createSubject(subject);
-        return new ResponseEntity<>(createdSubject, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Subject> updateSubject(@PathVariable Long id, @RequestBody Subject subjectDetails) {
-        Subject updatedSubject = subjectService.updateSubject(id, subjectDetails);
-        return ResponseEntity.ok(updatedSubject);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSubject(@PathVariable Long id) {
-        subjectService.deleteSubject(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Subject> create(@RequestBody SubjectDTO dto) {
+        return new ResponseEntity<>(subjectService.createSubject(dto), HttpStatus.CREATED);
     }
 }

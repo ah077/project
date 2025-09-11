@@ -1,8 +1,13 @@
 package com.fsd.project.service;
 
+import com.fsd.project.dto.ExamResultDTO;
 import com.fsd.project.exception.ResourceNotFoundException;
+import com.fsd.project.model.Exam;
 import com.fsd.project.model.ExamResult;
+import com.fsd.project.model.Student;
+import com.fsd.project.repo.ExamRepository;
 import com.fsd.project.repo.ExamResultRepository;
+import com.fsd.project.repo.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +19,12 @@ public class ExamResultService {
     @Autowired
     private ExamResultRepository examResultRepository;
 
+    @Autowired
+    private ExamRepository examRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
     public List<ExamResult> getAllExamResults() {
         return examResultRepository.findAll();
     }
@@ -23,22 +34,18 @@ public class ExamResultService {
                 .orElseThrow(() -> new ResourceNotFoundException("ExamResult not found with id: " + id));
     }
 
-    public ExamResult createExamResult(ExamResult examResult) {
-        // Business logic for linking to Exam, Student, FinalResult should be handled here
-        return examResultRepository.save(examResult);
-    }
+    public ExamResult createExamResult(ExamResultDTO dto) {
+        ExamResult result = new ExamResult();
+        result.setMarks(dto.getMarks());
 
-    public ExamResult updateExamResult(Long id, ExamResult resultDetails) {
-        ExamResult existingResult = getExamResultById(id);
-        existingResult.setMarks(resultDetails.getMarks());
-        existingResult.setGrade(resultDetails.getGrade());
-        return examResultRepository.save(existingResult);
-    }
+        Exam exam = examRepository.findById(dto.getExamId())
+                .orElseThrow(() -> new ResourceNotFoundException("Exam not found with id: " + dto.getExamId()));
+        result.setExam(exam);
 
-    public void deleteExamResult(Long id) {
-        if (!examResultRepository.existsById(id)) {
-            throw new ResourceNotFoundException("ExamResult not found with id: " + id);
-        }
-        examResultRepository.deleteById(id);
+        Student student = studentRepository.findById(dto.getStudentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + dto.getStudentId()));
+        result.setStudent(student);
+
+        return examResultRepository.save(result);
     }
 }

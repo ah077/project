@@ -1,5 +1,6 @@
 package com.fsd.project.controller;
 
+import com.fsd.project.dto.StudentDTO;
 import com.fsd.project.model.Student;
 import com.fsd.project.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,7 @@ import java.util.List;
 @RequestMapping("/api/v1/students")
 public class StudentController {
 
-    @Autowired
-    private StudentService studentService;
+    @Autowired private StudentService studentService;
 
     @GetMapping
     public List<Student> getAllStudents() {
@@ -23,20 +23,17 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        Student student = studentService.getStudentById(id);
-        return ResponseEntity.ok(student);
+        return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        Student createdStudent = studentService.createStudent(student);
-        return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
+    public ResponseEntity<Student> createStudent(@RequestBody StudentDTO dto) {
+        return new ResponseEntity<>(studentService.createStudent(dto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
-        Student updatedStudent = studentService.updateStudent(id, studentDetails);
-        return ResponseEntity.ok(updatedStudent);
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody StudentDTO dto) {
+        return ResponseEntity.ok(studentService.updateStudent(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -45,3 +42,4 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 }
+

@@ -1,5 +1,6 @@
 package com.fsd.project.controller;
 
+import com.fsd.project.dto.DepartmentDTO;
 import com.fsd.project.model.Department;
 import com.fsd.project.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,7 @@ import java.util.List;
 @RequestMapping("/api/v1/departments")
 public class DepartmentController {
 
-    @Autowired
-    private DepartmentService departmentService;
+    @Autowired private DepartmentService departmentService;
 
     @GetMapping
     public List<Department> getAllDepartments() {
@@ -23,20 +23,17 @@ public class DepartmentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Department> getDepartmentById(@PathVariable Long id) {
-        Department department = departmentService.getDepartmentById(id);
-        return ResponseEntity.ok(department);
+        return ResponseEntity.ok(departmentService.getDepartmentById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Department> createDepartment(@RequestBody Department department) {
-        Department createdDepartment = departmentService.createDepartment(department);
-        return new ResponseEntity<>(createdDepartment, HttpStatus.CREATED);
+    public ResponseEntity<Department> createDepartment(@RequestBody DepartmentDTO dto) {
+        return new ResponseEntity<>(departmentService.createDepartment(dto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Department> updateDepartment(@PathVariable Long id, @RequestBody Department departmentDetails) {
-        Department updatedDepartment = departmentService.updateDepartment(id, departmentDetails);
-        return ResponseEntity.ok(updatedDepartment);
+    public ResponseEntity<Department> updateDepartment(@PathVariable Long id, @RequestBody DepartmentDTO dto) {
+        return ResponseEntity.ok(departmentService.updateDepartment(id, dto));
     }
 
     @DeleteMapping("/{id}")

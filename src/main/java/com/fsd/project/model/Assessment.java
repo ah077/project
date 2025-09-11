@@ -27,9 +27,10 @@ public class Assessment {
     private Integer marks;
     private Integer totalMarks;
 
-    @ManyToMany(mappedBy = "assessments",cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
     @JsonIgnore 
-    private Set<Subject> subjects;
+    private Subject subject;
 
 	public Assessment() {
 		super();
@@ -37,14 +38,14 @@ public class Assessment {
 	}
 
 	public Assessment(Long id, String number, LocalDate date, Integer marks, Integer totalMarks,
-			Set<Subject> subjects) {
+			Subject subjects) {
 		super();
 		this.id = id;
 		this.number = number;
 		this.date = date;
 		this.marks = marks;
 		this.totalMarks = totalMarks;
-		this.subjects = subjects;
+		this.subject = subjects;
 	}
 
 	public Long getId() {
@@ -87,12 +88,11 @@ public class Assessment {
 		this.totalMarks = totalMarks;
 	}
 
-	public Set<Subject> getSubjects() {
-		return subjects;
+	public Subject getSubject() {
+	    return subject;
 	}
-
-	public void setSubjects(Set<Subject> subjects) {
-		this.subjects = subjects;
+	public void setSubject(Subject subject) {
+	    this.subject = subject;
 	}
 	
 

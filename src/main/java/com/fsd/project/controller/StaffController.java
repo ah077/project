@@ -1,5 +1,6 @@
 package com.fsd.project.controller;
 
+import com.fsd.project.dto.StaffDTO;
 import com.fsd.project.model.Staff;
 import com.fsd.project.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,31 +18,17 @@ public class StaffController {
     private StaffService staffService;
 
     @GetMapping
-    public List<Staff> getAllStaff() {
+    public List<Staff> getAll() {
         return staffService.getAllStaff();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Staff> getStaffById(@PathVariable Long id) {
-        Staff staff = staffService.getStaffById(id);
-        return ResponseEntity.ok(staff);
+    public ResponseEntity<Staff> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(staffService.getStaffById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Staff> createStaff(@RequestBody Staff staff) {
-        Staff createdStaff = staffService.createStaff(staff);
-        return new ResponseEntity<>(createdStaff, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Staff> updateStaff(@PathVariable Long id, @RequestBody Staff staffDetails) {
-        Staff updatedStaff = staffService.updateStaff(id, staffDetails);
-        return ResponseEntity.ok(updatedStaff);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStaff(@PathVariable Long id) {
-        staffService.deleteStaff(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Staff> create(@RequestBody StaffDTO dto) {
+        return new ResponseEntity<>(staffService.createStaff(dto), HttpStatus.CREATED);
     }
 }

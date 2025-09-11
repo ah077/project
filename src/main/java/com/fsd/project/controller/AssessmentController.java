@@ -1,5 +1,6 @@
 package com.fsd.project.controller;
 
+import com.fsd.project.dto.AssessmentDTO;
 import com.fsd.project.model.Assessment;
 import com.fsd.project.service.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,31 +18,18 @@ public class AssessmentController {
     private AssessmentService assessmentService;
 
     @GetMapping
-    public List<Assessment> getAllAssessments() {
+    public List<Assessment> getAll() {
         return assessmentService.getAllAssessments();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Assessment> getAssessmentById(@PathVariable Long id) {
-        Assessment assessment = assessmentService.getAssessmentById(id);
-        return ResponseEntity.ok(assessment);
+    public ResponseEntity<Assessment> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(assessmentService.getAssessmentById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Assessment> createAssessment(@RequestBody Assessment assessment) {
-        Assessment createdAssessment = assessmentService.createAssessment(assessment);
-        return new ResponseEntity<>(createdAssessment, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Assessment> updateAssessment(@PathVariable Long id, @RequestBody Assessment assessmentDetails) {
-        Assessment updatedAssessment = assessmentService.updateAssessment(id, assessmentDetails);
-        return ResponseEntity.ok(updatedAssessment);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAssessment(@PathVariable Long id) {
-        assessmentService.deleteAssessment(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Assessment> create(@RequestBody AssessmentDTO dto) {
+        Assessment saved = assessmentService.createAssessment(dto);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 }

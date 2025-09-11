@@ -8,11 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import com.fsd.project.dto.SemesterDTO;
+
 @Service
 public class SemesterService {
 
-    @Autowired
-    private SemesterRepository semesterRepository;
+    @Autowired private SemesterRepository semesterRepository;
 
     public List<Semester> getAllSemesters() {
         return semesterRepository.findAll();
@@ -23,22 +24,27 @@ public class SemesterService {
                 .orElseThrow(() -> new ResourceNotFoundException("Semester not found with id: " + id));
     }
 
-    public Semester createSemester(Semester semester) {
-        return semesterRepository.save(semester);
+    public Semester createSemester(SemesterDTO dto) {
+        Semester s = new Semester();
+        s.setSno(dto.getSno());
+        s.setStage(dto.getStage());
+        s.setEndYear(dto.getEndYear());
+        return semesterRepository.save(s);
     }
 
-    public Semester updateSemester(Long id, Semester semesterDetails) {
-        Semester existingSemester = getSemesterById(id);
-        existingSemester.setSno(semesterDetails.getSno());
-        existingSemester.setStage(semesterDetails.getStage());
-        existingSemester.setEndYear(semesterDetails.getEndYear());
-        return semesterRepository.save(existingSemester);
+    public Semester updateSemester(Long id, SemesterDTO dto) {
+        Semester s = getSemesterById(id);
+        s.setSno(dto.getSno());
+        s.setStage(dto.getStage());
+        s.setEndYear(dto.getEndYear());
+        return semesterRepository.save(s);
     }
 
     public void deleteSemester(Long id) {
-        if (!semesterRepository.existsById(id)) {
+        if (!semesterRepository.existsById(id))
             throw new ResourceNotFoundException("Semester not found with id: " + id);
-        }
         semesterRepository.deleteById(id);
     }
 }
+
+

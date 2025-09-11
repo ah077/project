@@ -1,18 +1,25 @@
 package com.fsd.project.service;
 
+import com.fsd.project.dto.SubjectDTO;
 import com.fsd.project.exception.ResourceNotFoundException;
+import com.fsd.project.model.Assessment;
 import com.fsd.project.model.Subject;
+import com.fsd.project.repo.AssessmentRepository;
 import com.fsd.project.repo.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class SubjectService {
 
     @Autowired
     private SubjectRepository subjectRepository;
+    @Autowired
+    private AssessmentRepository assessmentRepository;
 
     public List<Subject> getAllSubjects() {
         return subjectRepository.findAll();
@@ -23,23 +30,18 @@ public class SubjectService {
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));
     }
 
-    public Subject createSubject(Subject subject) {
-        return subjectRepository.save(subject);
-    }
+    public Subject createSubject(SubjectDTO dto) {
+        Subject s = new Subject();
+        s.setCode(dto.getCode());
+        s.setName(dto.getName());
+        s.setCredits(dto.getCredits());
+        s.setDuration(dto.getDuration());
 
-    public Subject updateSubject(Long id, Subject subjectDetails) {
-        Subject existingSubject = getSubjectById(id);
-        existingSubject.setName(subjectDetails.getName());
-        existingSubject.setCode(subjectDetails.getCode());
-        existingSubject.setCredits(subjectDetails.getCredits());
-        existingSubject.setDuration(subjectDetails.getDuration());
-        return subjectRepository.save(existingSubject);
-    }
-
-    public void deleteSubject(Long id) {
-        if (!subjectRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Subject not found with id: " + id);
+        if (dto.getAssessmentIds() != null) {
+            Set<Assessment> assessments = new HashSet<>(assessmentRepository.findAllById(dto.getAssessmentIds()));
+            s.setAssessments(assessments);
         }
-        subjectRepository.deleteById(id);
+
+        return subjectRepository.save(s);
     }
 }

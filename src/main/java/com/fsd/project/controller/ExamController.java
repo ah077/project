@@ -1,5 +1,6 @@
 package com.fsd.project.controller;
 
+import com.fsd.project.dto.ExamDTO;
 import com.fsd.project.model.Exam;
 import com.fsd.project.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,31 +18,17 @@ public class ExamController {
     private ExamService examService;
 
     @GetMapping
-    public List<Exam> getAllExams() {
+    public List<Exam> getAll() {
         return examService.getAllExams();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Exam> getExamById(@PathVariable Long id) {
-        Exam exam = examService.getExamById(id);
-        return ResponseEntity.ok(exam);
+    public ResponseEntity<Exam> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(examService.getExamById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Exam> createExam(@RequestBody Exam exam) {
-        Exam createdExam = examService.createExam(exam);
-        return new ResponseEntity<>(createdExam, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Exam> updateExam(@PathVariable Long id, @RequestBody Exam examDetails) {
-        Exam updatedExam = examService.updateExam(id, examDetails);
-        return ResponseEntity.ok(updatedExam);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExam(@PathVariable Long id) {
-        examService.deleteExam(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Exam> create(@RequestBody ExamDTO dto) {
+        return new ResponseEntity<>(examService.createExam(dto), HttpStatus.CREATED);
     }
 }

@@ -62,8 +62,8 @@ public class Student {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Student(Long id, String rgNo, String name, String contact, String email, String gender, LocalDate dob,
-			Semester semester, Department department, Set<Subject> subjects, Set<ExamResult> examResults,
+	public Student(Long id, String rgNo, String name, String contact, String email, String gender,
+			Semester semester, Department department,LocalDate dob, Set<Subject> subjects, Set<ExamResult> examResults,
 			Set<FinalResult> finalResults) {
 		super();
 		this.id = id;
@@ -175,6 +175,8 @@ public class Student {
 	public void setFinalResults(Set<FinalResult> finalResults) {
 		this.finalResults = finalResults;
 	}
+
+	
 
     
 }

@@ -1,7 +1,10 @@
 package com.fsd.project.service;
 
+import com.fsd.project.dto.StaffDTO;
 import com.fsd.project.exception.ResourceNotFoundException;
+import com.fsd.project.model.Department;
 import com.fsd.project.model.Staff;
+import com.fsd.project.repo.DepartmentRepository;
 import com.fsd.project.repo.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,8 @@ public class StaffService {
 
     @Autowired
     private StaffRepository staffRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
     public List<Staff> getAllStaff() {
         return staffRepository.findAll();
@@ -23,24 +28,18 @@ public class StaffService {
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
     }
 
-    public Staff createStaff(Staff staff) {
-        return staffRepository.save(staff);
-    }
+    public Staff createStaff(StaffDTO dto) {
+        Staff s = new Staff();
+        s.setName(dto.getName());
+        s.setRole(dto.getRole());
+        s.setPhone(dto.getPhone());
+        s.setAddress(dto.getAddress());
 
-    public Staff updateStaff(Long id, Staff staffDetails) {
-        Staff existingStaff = getStaffById(id);
-        existingStaff.setName(staffDetails.getName());
-        existingStaff.setRole(staffDetails.getRole());
-        existingStaff.setPhone(staffDetails.getPhone());
-        existingStaff.setAddress(staffDetails.getAddress());
-        // Note: Updating department relationship would require fetching the Department entity
-        return staffRepository.save(existingStaff);
-    }
+        Department dept = departmentRepository.findById(dto.getDepartmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+        s.setDepartment(dept);
+        
 
-    public void deleteStaff(Long id) {
-        if (!staffRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Staff not found with id: " + id);
-        }
-        staffRepository.deleteById(id);
+        return staffRepository.save(s);
     }
 }

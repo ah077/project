@@ -1,8 +1,11 @@
 package com.fsd.project.service;
 
+import com.fsd.project.dto.AssessmentDTO;
 import com.fsd.project.exception.ResourceNotFoundException;
 import com.fsd.project.model.Assessment;
+import com.fsd.project.model.Subject;
 import com.fsd.project.repo.AssessmentRepository;
+import com.fsd.project.repo.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,9 @@ public class AssessmentService {
     @Autowired
     private AssessmentRepository assessmentRepository;
 
+    @Autowired
+    private SubjectRepository subjectRepository;
+
     public List<Assessment> getAllAssessments() {
         return assessmentRepository.findAll();
     }
@@ -23,23 +29,19 @@ public class AssessmentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Assessment not found with id: " + id));
     }
 
-    public Assessment createAssessment(Assessment assessment) {
-        return assessmentRepository.save(assessment);
-    }
+    public Assessment createAssessment(AssessmentDTO dto) {
+        Assessment assessment = new Assessment();
+        assessment.setNumber(dto.getNumber());
+        assessment.setDate(dto.getDate());
+        assessment.setMarks(dto.getMarks());
+        assessment.setTotalMarks(dto.getTotalMarks());
 
-    public Assessment updateAssessment(Long id, Assessment assessmentDetails) {
-        Assessment existingAssessment = getAssessmentById(id);
-        existingAssessment.setNumber(assessmentDetails.getNumber());
-        existingAssessment.setDate(assessmentDetails.getDate());
-        existingAssessment.setMarks(assessmentDetails.getMarks());
-        existingAssessment.setTotalMarks(assessmentDetails.getTotalMarks());
-        return assessmentRepository.save(existingAssessment);
-    }
-
-    public void deleteAssessment(Long id) {
-        if (!assessmentRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Assessment not found with id: " + id);
+        if (dto.getSubjectId() != null) {
+            Subject subject = subjectRepository.findById(dto.getSubjectId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + dto.getSubjectId()));
+            assessment.setSubject(subject);
         }
-        assessmentRepository.deleteById(id);
+
+        return assessmentRepository.save(assessment);
     }
 }

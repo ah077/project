@@ -1,5 +1,6 @@
 package com.fsd.project.controller;
 
+import com.fsd.project.dto.SemesterDTO;
 import com.fsd.project.model.Semester;
 import com.fsd.project.service.SemesterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,7 @@ import java.util.List;
 @RequestMapping("/api/v1/semesters")
 public class SemesterController {
 
-    @Autowired
-    private SemesterService semesterService;
+    @Autowired private SemesterService semesterService;
 
     @GetMapping
     public List<Semester> getAllSemesters() {
@@ -23,20 +23,17 @@ public class SemesterController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Semester> getSemesterById(@PathVariable Long id) {
-        Semester semester = semesterService.getSemesterById(id);
-        return ResponseEntity.ok(semester);
+        return ResponseEntity.ok(semesterService.getSemesterById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Semester> createSemester(@RequestBody Semester semester) {
-        Semester createdSemester = semesterService.createSemester(semester);
-        return new ResponseEntity<>(createdSemester, HttpStatus.CREATED);
+    public ResponseEntity<Semester> createSemester(@RequestBody SemesterDTO dto) {
+        return new ResponseEntity<>(semesterService.createSemester(dto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Semester> updateSemester(@PathVariable Long id, @RequestBody Semester semesterDetails) {
-        Semester updatedSemester = semesterService.updateSemester(id, semesterDetails);
-        return ResponseEntity.ok(updatedSemester);
+    public ResponseEntity<Semester> updateSemester(@PathVariable Long id, @RequestBody SemesterDTO dto) {
+        return ResponseEntity.ok(semesterService.updateSemester(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -45,3 +42,4 @@ public class SemesterController {
         return ResponseEntity.noContent().build();
     }
 }
+
