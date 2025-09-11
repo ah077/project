@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "assessments")
 public class Assessment {
@@ -26,8 +27,8 @@ public class Assessment {
     private Integer marks;
     private Integer totalMarks;
 
-    @ManyToMany(mappedBy = "assessments")
-    @JsonBackReference("subject-assessment")
+    @ManyToMany(mappedBy = "assessments",cascade = CascadeType.ALL)
+    @JsonIgnore 
     private Set<Subject> subjects;
 
 	public Assessment() {

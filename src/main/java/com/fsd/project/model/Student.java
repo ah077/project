@@ -31,17 +31,17 @@ public class Student {
     private String gender;
     private LocalDate dob;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "semester_id")
     @JsonBackReference
     private Semester semester;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "department_id")
     private Department department;
 
     // student takes many subjects, subject can be taken by many students -> M:N
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "student_subject",
         joinColumns = @JoinColumn(name = "student_id"),
@@ -49,11 +49,11 @@ public class Student {
     )
     private Set<Subject> subjects;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
     @JsonManagedReference("student-examresult") // Named reference
     private Set<ExamResult> examResults;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
     @JsonManagedReference("student-finalresult") // New named reference
     private Set<FinalResult> finalResults;
 

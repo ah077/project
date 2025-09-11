@@ -25,7 +25,7 @@ public class Semester {
     private String stage;
     private String endYear; // or LocalDate endDate
 
-    @OneToMany(mappedBy = "semester")
+    @OneToMany(mappedBy = "semester",cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<Student> students;
 

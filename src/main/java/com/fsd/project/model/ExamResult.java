@@ -26,17 +26,17 @@ public class ExamResult {
     private Integer marks;
     private String grade;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "exam_id")
     @JsonBackReference("exam-examresult") // Matches name in Exam.java
     private Exam exam;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
     @JsonBackReference("student-examresult") // Matches name in Student.java
     private Student student;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "final_result_id")
     @JsonBackReference("finalresult-examresult") // Matches name in FinalResult.java
     private FinalResult finalResult;

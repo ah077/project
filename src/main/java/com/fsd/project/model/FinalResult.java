@@ -26,16 +26,16 @@ public class FinalResult {
     private Double percentage;
     private String grade;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
     @JsonBackReference("student-finalresult") // Matches name in Student.java
     private Student student;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "semester_id")
     private Semester semester;
 
-    @OneToMany(mappedBy = "finalResult")
+    @OneToMany(mappedBy = "finalResult",cascade = CascadeType.ALL)
     @JsonManagedReference("finalresult-examresult") // Named reference
     private Set<ExamResult> includedExamResults;
 

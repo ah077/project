@@ -29,13 +29,13 @@ public class Subject {
     // Subject <-> Student handled in Student entity ( ManyToMany )
 
     // Subject <-> Assessment : diagram shows M..M, so many-to-many
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "subject_assessment",
         joinColumns = @JoinColumn(name = "subject_id"),
         inverseJoinColumns = @JoinColumn(name = "assessment_id")
     )
-    @JsonManagedReference("subject-assessment")
+//    @JsonManagedReference("subject-assessment")
     private Set<Assessment> assessments;
 
 	public Subject() {

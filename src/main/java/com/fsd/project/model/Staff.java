@@ -25,7 +25,7 @@ public class Staff {
     private String phone;
     private String address;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "department_id")
     @JsonBackReference
     private Department department;
