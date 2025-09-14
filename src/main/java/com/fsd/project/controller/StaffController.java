@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/staff")
 public class StaffController {
+
     @Autowired private StaffService staffService;
 
     @GetMapping
@@ -19,8 +21,24 @@ public class StaffController {
         return staffService.getAllStaff();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<StaffDTO> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(staffService.getStaffById(id));
+    }
+
     @PostMapping
     public ResponseEntity<Staff> create(@RequestBody StaffDTO dto) {
         return new ResponseEntity<>(staffService.createStaff(dto), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Staff> update(@PathVariable Long id, @RequestBody StaffDTO dto) {
+        return ResponseEntity.ok(staffService.updateStaff(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        staffService.deleteStaff(id);
+        return ResponseEntity.noContent().build();
     }
 }

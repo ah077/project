@@ -1,6 +1,7 @@
 package com.fsd.project.service;
 
 import com.fsd.project.dto.SubjectDTO;
+import com.fsd.project.exception.ResourceNotFoundException;
 import com.fsd.project.model.Subject;
 import com.fsd.project.repo.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,12 @@ public class SubjectService {
                 .collect(Collectors.toList());
     }
 
+    public SubjectDTO getSubjectById(Long id) {
+        return subjectRepository.findById(id)
+                .map(this::mapEntityToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));
+    }
+
     @Transactional
     public Subject createSubject(SubjectDTO dto) {
         Subject s = new Subject();
@@ -30,6 +37,25 @@ public class SubjectService {
         s.setCredits(dto.getCredits());
         s.setDuration(dto.getDuration());
         return subjectRepository.save(s);
+    }
+
+    @Transactional
+    public Subject updateSubject(Long id, SubjectDTO dto) {
+        Subject s = subjectRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));
+        s.setCode(dto.getCode());
+        s.setName(dto.getName());
+        s.setCredits(dto.getCredits());
+        s.setDuration(dto.getDuration());
+        return subjectRepository.save(s);
+    }
+
+    @Transactional
+    public void deleteSubject(Long id) {
+        if (!subjectRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Subject not found with id: " + id);
+        }
+        subjectRepository.deleteById(id);
     }
 
     private SubjectDTO mapEntityToDto(Subject s) {

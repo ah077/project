@@ -1,6 +1,7 @@
 package com.fsd.project.service;
 
 import com.fsd.project.dto.ExamDTO;
+import com.fsd.project.exception.ResourceNotFoundException;
 import com.fsd.project.model.Exam;
 import com.fsd.project.repo.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,12 @@ public class ExamService {
             .collect(Collectors.toList());
     }
 
+    public ExamDTO getExamById(Long id) {
+        return examRepository.findById(id)
+            .map(this::mapEntityToDto)
+            .orElseThrow(() -> new ResourceNotFoundException("Exam not found with id: " + id));
+    }
+
     @Transactional
     public Exam createExam(ExamDTO dto) {
         Exam e = new Exam();
@@ -29,6 +36,25 @@ public class ExamService {
         e.setType(dto.getType());
         e.setTotalMarks(dto.getTotalMarks());
         return examRepository.save(e);
+    }
+
+    @Transactional
+    public Exam updateExam(Long id, ExamDTO dto) {
+        Exam e = examRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Exam not found with id: " + id));
+        e.setName(dto.getName());
+        e.setDate(dto.getDate());
+        e.setType(dto.getType());
+        e.setTotalMarks(dto.getTotalMarks());
+        return examRepository.save(e);
+    }
+
+    @Transactional
+    public void deleteExam(Long id) {
+        if (!examRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Exam not found with id: " + id);
+        }
+        examRepository.deleteById(id);
     }
 
     private ExamDTO mapEntityToDto(Exam exam) {

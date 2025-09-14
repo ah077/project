@@ -26,6 +26,12 @@ public class StaffService {
                 .collect(Collectors.toList());
     }
 
+    public StaffDTO getStaffById(Long id) {
+        return staffRepository.findById(id)
+                .map(this::mapEntityToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
+    }
+
     @Transactional
     public Staff createStaff(StaffDTO dto) {
         Staff s = new Staff();
@@ -41,12 +47,39 @@ public class StaffService {
         return staffRepository.save(s);
     }
 
+    @Transactional
+    public Staff updateStaff(Long id, StaffDTO dto) {
+        Staff s = staffRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
+        
+        s.setName(dto.getName());
+        s.setRole(dto.getRole());
+        s.setPhone(dto.getPhone());
+        s.setAddress(dto.getAddress());
+
+        if (dto.getDepartmentId() != null) {
+            Department dept = departmentRepository.findById(dto.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + dto.getDepartmentId()));
+            s.setDepartment(dept);
+        }
+        return staffRepository.save(s);
+    }
+
+    @Transactional
+    public void deleteStaff(Long id) {
+        if (!staffRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Staff not found with id: " + id);
+        }
+        staffRepository.deleteById(id);
+    }
+
     private StaffDTO mapEntityToDto(Staff s) {
         StaffDTO dto = new StaffDTO();
         dto.setId(s.getId());
         dto.setName(s.getName());
         dto.setRole(s.getRole());
         dto.setPhone(s.getPhone());
+        dto.setAddress(s.getAddress());
         if (s.getDepartment() != null) {
             dto.setDepartmentName(s.getDepartment().getName());
         }

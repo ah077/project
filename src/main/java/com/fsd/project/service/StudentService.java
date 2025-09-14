@@ -30,11 +30,33 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
+    public StudentDTO getStudentById(Long id) {
+        return studentRepository.findById(id)
+                .map(this::mapEntityToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
+    }
+
     @Transactional
     public Student createStudent(StudentDTO dto) {
         Student student = new Student();
         copyDtoToEntity(dto, student);
         return studentRepository.save(student);
+    }
+
+    @Transactional
+    public Student updateStudent(Long id, StudentDTO dto) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
+        copyDtoToEntity(dto, student);
+        return studentRepository.save(student);
+    }
+
+    @Transactional
+    public void deleteStudent(Long id) {
+        if (!studentRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Student not found with id: " + id);
+        }
+        studentRepository.deleteById(id);
     }
 
     private StudentDTO mapEntityToDto(Student student) {
@@ -43,6 +65,7 @@ public class StudentService {
         dto.setRgNo(student.getRgNo());
         dto.setName(student.getName());
         dto.setEmail(student.getEmail());
+        dto.setContact(student.getContact());
         if (student.getDepartment() != null) {
             dto.setDepartmentName(student.getDepartment().getName());
         }
@@ -67,6 +90,9 @@ public class StudentService {
         if (dto.getSemesterId() != null) {
             student.setSemester(semesterRepository.findById(dto.getSemesterId())
                     .orElseThrow(() -> new ResourceNotFoundException("Semester not found with id: " + dto.getSemesterId())));
+        }
+        if (dto.getSubjectIds() != null && !dto.getSubjectIds().isEmpty()) {
+            student.setSubjects(new HashSet<>(subjectRepository.findAllById(dto.getSubjectIds())));
         }
     }
 }

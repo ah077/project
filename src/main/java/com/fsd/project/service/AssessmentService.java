@@ -1,6 +1,7 @@
 package com.fsd.project.service;
 
 import com.fsd.project.dto.AssessmentDTO;
+import com.fsd.project.exception.ResourceNotFoundException;
 import com.fsd.project.model.Assessment;
 import com.fsd.project.repo.AssessmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,12 @@ public class AssessmentService {
                 .collect(Collectors.toList());
     }
 
+    public AssessmentDTO getAssessmentById(Long id) {
+        return assessmentRepository.findById(id)
+                .map(this::mapEntityToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Assessment not found with id: " + id));
+    }
+
     @Transactional
     public Assessment createAssessment(AssessmentDTO dto) {
         Assessment assessment = new Assessment();
@@ -30,6 +37,25 @@ public class AssessmentService {
         assessment.setMarks(dto.getMarks());
         assessment.setTotalMarks(dto.getTotalMarks());
         return assessmentRepository.save(assessment);
+    }
+
+    @Transactional
+    public Assessment updateAssessment(Long id, AssessmentDTO dto) {
+        Assessment assessment = assessmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Assessment not found with id: " + id));
+        assessment.setNumber(dto.getNumber());
+        assessment.setDate(dto.getDate());
+        assessment.setMarks(dto.getMarks());
+        assessment.setTotalMarks(dto.getTotalMarks());
+        return assessmentRepository.save(assessment);
+    }
+
+    @Transactional
+    public void deleteAssessment(Long id) {
+        if (!assessmentRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Assessment not found with id: " + id);
+        }
+        assessmentRepository.deleteById(id);
     }
 
     private AssessmentDTO mapEntityToDto(Assessment a) {

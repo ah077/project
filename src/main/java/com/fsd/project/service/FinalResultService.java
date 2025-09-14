@@ -29,6 +29,12 @@ public class FinalResultService {
                 .collect(Collectors.toList());
     }
 
+    public FinalResultDTO getFinalResultById(Long id) {
+        return finalResultRepository.findById(id)
+                .map(this::mapEntityToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("FinalResult not found with id " + id));
+    }
+
     @Transactional
     public FinalResult createFinalResult(FinalResultDTO dto) {
         FinalResult result = new FinalResult();
@@ -46,6 +52,14 @@ public class FinalResultService {
         result.setSemester(semester);
 
         return finalResultRepository.save(result);
+    }
+
+    @Transactional
+    public void deleteFinalResult(Long id) {
+        if (!finalResultRepository.existsById(id)) {
+            throw new ResourceNotFoundException("FinalResult not found with id " + id);
+        }
+        finalResultRepository.deleteById(id);
     }
     
     private FinalResultDTO mapEntityToDto(FinalResult fr) {
