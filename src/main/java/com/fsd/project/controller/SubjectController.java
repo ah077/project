@@ -7,24 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/subjects")
 public class SubjectController {
-
-    @Autowired
-    private SubjectService subjectService;
+    @Autowired private SubjectService subjectService;
 
     @GetMapping
-    public List<Subject> getAll() {
+    public List<SubjectDTO> getAll() {
         return subjectService.getAllSubjects();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Subject> getOne(@PathVariable Long id) {
-        return ResponseEntity.ok(subjectService.getSubjectById(id));
     }
 
     @PostMapping

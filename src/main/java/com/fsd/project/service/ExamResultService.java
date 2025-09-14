@@ -29,12 +29,6 @@ public class ExamResultService {
                 .collect(Collectors.toList());
     }
 
-    public ExamResultDTO getExamResultById(Long id) {
-        return examResultRepository.findById(id)
-                .map(this::mapEntityToDto)
-                .orElseThrow(() -> new ResourceNotFoundException("ExamResult not found with id " + id));
-    }
-
     @Transactional
     public ExamResult createExamResult(ExamResultDTO dto) {
         ExamResult result = new ExamResult();

@@ -7,24 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/exams")
 public class ExamController {
-
-    @Autowired
-    private ExamService examService;
+    @Autowired private ExamService examService;
 
     @GetMapping
-    public List<Exam> getAll() {
+    public List<ExamDTO> getAll() {
         return examService.getAllExams();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Exam> getOne(@PathVariable Long id) {
-        return ResponseEntity.ok(examService.getExamById(id));
     }
 
     @PostMapping

@@ -26,12 +26,6 @@ public class StaffService {
                 .collect(Collectors.toList());
     }
 
-    public StaffDTO getStaffById(Long id) {
-        return staffRepository.findById(id)
-                .map(this::mapEntityToDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
-    }
-
     @Transactional
     public Staff createStaff(StaffDTO dto) {
         Staff s = new Staff();
@@ -53,7 +47,6 @@ public class StaffService {
         dto.setName(s.getName());
         dto.setRole(s.getRole());
         dto.setPhone(s.getPhone());
-        dto.setAddress(s.getAddress());
         if (s.getDepartment() != null) {
             dto.setDepartmentName(s.getDepartment().getName());
         }

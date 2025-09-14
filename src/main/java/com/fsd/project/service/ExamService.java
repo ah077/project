@@ -1,29 +1,27 @@
 package com.fsd.project.service;
 
 import com.fsd.project.dto.ExamDTO;
-import com.fsd.project.exception.ResourceNotFoundException;
 import com.fsd.project.model.Exam;
 import com.fsd.project.repo.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class ExamService {
+    @Autowired private ExamRepository examRepository;
 
-    @Autowired
-    private ExamRepository examRepository;
-
-    public List<Exam> getAllExams() {
-        return examRepository.findAll();
+    public List<ExamDTO> getAllExams() {
+        return examRepository.findAll().stream()
+            .map(this::mapEntityToDto)
+            .collect(Collectors.toList());
     }
 
-    public Exam getExamById(Long id) {
-        return examRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Exam not found with id: " + id));
-    }
-
+    @Transactional
     public Exam createExam(ExamDTO dto) {
         Exam e = new Exam();
         e.setName(dto.getName());
@@ -31,5 +29,15 @@ public class ExamService {
         e.setType(dto.getType());
         e.setTotalMarks(dto.getTotalMarks());
         return examRepository.save(e);
+    }
+
+    private ExamDTO mapEntityToDto(Exam exam) {
+        ExamDTO dto = new ExamDTO();
+        dto.setId(exam.getId());
+        dto.setName(exam.getName());
+        dto.setDate(exam.getDate());
+        dto.setType(exam.getType());
+        dto.setTotalMarks(exam.getTotalMarks());
+        return dto;
     }
 }

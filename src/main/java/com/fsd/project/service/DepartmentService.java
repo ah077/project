@@ -23,12 +23,6 @@ public class DepartmentService {
                 .collect(Collectors.toList());
     }
 
-    public DepartmentDTO getDepartmentById(Long id) {
-        return departmentRepository.findById(id)
-                .map(this::mapEntityToDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + id));
-    }
-
     @Transactional
     public Department createDepartment(DepartmentDTO dto) {
         Department d = new Department();
@@ -36,23 +30,6 @@ public class DepartmentService {
         d.setIntake(dto.getIntake());
         d.setHod(dto.getHod());
         return departmentRepository.save(d);
-    }
-
-    @Transactional
-    public Department updateDepartment(Long id, DepartmentDTO dto) {
-        Department d = departmentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + id));
-        d.setName(dto.getName());
-        d.setIntake(dto.getIntake());
-        d.setHod(dto.getHod());
-        return departmentRepository.save(d);
-    }
-
-    @Transactional
-    public void deleteDepartment(Long id) {
-        if (!departmentRepository.existsById(id))
-            throw new ResourceNotFoundException("Department not found with id: " + id);
-        departmentRepository.deleteById(id);
     }
 
     private DepartmentDTO mapEntityToDto(Department d) {
