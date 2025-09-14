@@ -18,12 +18,12 @@ public class StaffController {
     private StaffService staffService;
 
     @GetMapping
-    public List<Staff> getAll() {
+    public List<StaffDTO> getAll() {
         return staffService.getAllStaff();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Staff> getOne(@PathVariable Long id) {
+    public ResponseEntity<StaffDTO> getOne(@PathVariable Long id) {
         return ResponseEntity.ok(staffService.getStaffById(id));
     }
 

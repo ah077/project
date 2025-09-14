@@ -17,12 +17,12 @@ public class SemesterController {
     @Autowired private SemesterService semesterService;
 
     @GetMapping
-    public List<Semester> getAllSemesters() {
+    public List<SemesterDTO> getAllSemesters() {
         return semesterService.getAllSemesters();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Semester> getSemesterById(@PathVariable Long id) {
+    public ResponseEntity<SemesterDTO> getSemesterById(@PathVariable Long id) {
         return ResponseEntity.ok(semesterService.getSemesterById(id));
     }
 
@@ -42,4 +42,3 @@ public class SemesterController {
         return ResponseEntity.noContent().build();
     }
 }
-

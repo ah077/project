@@ -1,24 +1,12 @@
 package com.fsd.project.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "final_results")
 public class FinalResult {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Integer subTotal;
@@ -26,36 +14,13 @@ public class FinalResult {
     private Double percentage;
     private String grade;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
     @JoinColumn(name = "student_id")
-    @JsonBackReference("student-finalresult") // Matches name in Student.java
     private Student student;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
     @JoinColumn(name = "semester_id")
     private Semester semester;
-
-    @OneToMany(mappedBy = "finalResult",cascade = CascadeType.ALL)
-    @JsonManagedReference("finalresult-examresult") // Named reference
-    private Set<ExamResult> includedExamResults;
-
-	public FinalResult() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public FinalResult(Long id, Integer subTotal, Integer total, Double percentage, String grade, Student student,
-			Semester semester, Set<ExamResult> includedExamResults) {
-		super();
-		this.id = id;
-		this.subTotal = subTotal;
-		this.total = total;
-		this.percentage = percentage;
-		this.grade = grade;
-		this.student = student;
-		this.semester = semester;
-		this.includedExamResults = includedExamResults;
-	}
 
 	public Long getId() {
 		return id;
@@ -112,14 +77,6 @@ public class FinalResult {
 	public void setSemester(Semester semester) {
 		this.semester = semester;
 	}
-
-	public Set<ExamResult> getIncludedExamResults() {
-		return includedExamResults;
-	}
-
-	public void setIncludedExamResults(Set<ExamResult> includedExamResults) {
-		this.includedExamResults = includedExamResults;
-	}
-
+    
     
 }

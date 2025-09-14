@@ -17,12 +17,12 @@ public class DepartmentController {
     @Autowired private DepartmentService departmentService;
 
     @GetMapping
-    public List<Department> getAllDepartments() {
+    public List<DepartmentDTO> getAllDepartments() {
         return departmentService.getAllDepartments();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Department> getDepartmentById(@PathVariable Long id) {
+    public ResponseEntity<DepartmentDTO> getDepartmentById(@PathVariable Long id) {
         return ResponseEntity.ok(departmentService.getDepartmentById(id));
     }
 

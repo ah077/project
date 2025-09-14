@@ -1,50 +1,80 @@
 package com.fsd.project.service;
 
 import com.fsd.project.dto.FinalResultDTO;
+import com.fsd.project.exception.ResourceNotFoundException;
 import com.fsd.project.model.FinalResult;
 import com.fsd.project.model.Semester;
 import com.fsd.project.model.Student;
 import com.fsd.project.repo.FinalResultRepository;
 import com.fsd.project.repo.SemesterRepository;
 import com.fsd.project.repo.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class FinalResultService {
 
-    private final FinalResultRepository repo;
-    private final StudentRepository studentRepo;
-    private final SemesterRepository semesterRepo;
+    @Autowired private FinalResultRepository finalResultRepository;
+    @Autowired private StudentRepository studentRepository;
+    @Autowired private SemesterRepository semesterRepository;
 
-    public FinalResultService(FinalResultRepository repo,
-                              StudentRepository studentRepo,
-                              SemesterRepository semesterRepo) {
-        this.repo = repo;
-        this.studentRepo = studentRepo;
-        this.semesterRepo = semesterRepo;
+    public List<FinalResultDTO> getAllFinalResults() {
+        return finalResultRepository.findAll().stream()
+                .map(this::mapEntityToDto)
+                .collect(Collectors.toList());
     }
 
-    public List<FinalResult> getAll() {
-        return repo.findAll();
+    public FinalResultDTO getFinalResultById(Long id) {
+        return finalResultRepository.findById(id)
+                .map(this::mapEntityToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("FinalResult not found with id " + id));
     }
 
-    public FinalResult create(FinalResultDTO dto) {
-        FinalResult fr = new FinalResult();
-        fr.setSubTotal(dto.getSubTotal());
-        fr.setTotal(dto.getTotal());
-        fr.setPercentage(dto.getPercentage());
-        fr.setGrade(dto.getGrade());
+    @Transactional
+    public FinalResult createFinalResult(FinalResultDTO dto) {
+        FinalResult result = new FinalResult();
+        result.setSubTotal(dto.getSubTotal());
+        result.setTotal(dto.getTotal());
+        result.setPercentage(dto.getPercentage());
+        result.setGrade(dto.getGrade());
 
-        Student student = studentRepo.findById(dto.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        Semester semester = semesterRepo.findById(dto.getSemesterId())
-                .orElseThrow(() -> new RuntimeException("Semester not found"));
+        Student student = studentRepository.findById(dto.getStudentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + dto.getStudentId()));
+        Semester semester = semesterRepository.findById(dto.getSemesterId())
+                .orElseThrow(() -> new ResourceNotFoundException("Semester not found with id: " + dto.getSemesterId()));
 
-        fr.setStudent(student);
-        fr.setSemester(semester);
+        result.setStudent(student);
+        result.setSemester(semester);
 
-        return repo.save(fr);
+        return finalResultRepository.save(result);
+    }
+
+    @Transactional
+    public void deleteFinalResult(Long id) {
+        if (!finalResultRepository.existsById(id)) {
+            throw new ResourceNotFoundException("FinalResult not found with id " + id);
+        }
+        finalResultRepository.deleteById(id);
+    }
+    
+    private FinalResultDTO mapEntityToDto(FinalResult fr) {
+        FinalResultDTO dto = new FinalResultDTO();
+        dto.setId(fr.getId());
+        dto.setSubTotal(fr.getSubTotal());
+        dto.setTotal(fr.getTotal());
+        dto.setPercentage(fr.getPercentage());
+        dto.setGrade(fr.getGrade());
+        if (fr.getStudent() != null) {
+            dto.setStudentName(fr.getStudent().getName());
+        }
+        if (fr.getSemester() != null) {
+            dto.setSemesterInfo(fr.getSemester().getSno() + " - " + fr.getSemester().getStage());
+        }
+        return dto;
     }
 }

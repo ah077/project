@@ -2,73 +2,99 @@ package com.fsd.project.service;
 
 import com.fsd.project.dto.StudentDTO;
 import com.fsd.project.exception.ResourceNotFoundException;
-import com.fsd.project.model.Department;
-import com.fsd.project.model.Semester;
 import com.fsd.project.model.Student;
 import com.fsd.project.repo.DepartmentRepository;
 import com.fsd.project.repo.SemesterRepository;
 import com.fsd.project.repo.StudentRepository;
 import com.fsd.project.repo.SubjectRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class StudentService {
 
     @Autowired private StudentRepository studentRepository;
     @Autowired private DepartmentRepository departmentRepository;
     @Autowired private SemesterRepository semesterRepository;
-    @Autowired private SubjectRepository sr;
+    @Autowired private SubjectRepository subjectRepository;
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentDTO> getAllStudents() {
+        return studentRepository.findAll().stream()
+                .map(this::mapEntityToDto)
+                .collect(Collectors.toList());
     }
 
-    public Student getStudentById(Long id) {
+    public StudentDTO getStudentById(Long id) {
         return studentRepository.findById(id)
+                .map(this::mapEntityToDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
     }
 
+    @Transactional
     public Student createStudent(StudentDTO dto) {
-        Student s = new Student();
-        copyDtoToEntity(dto, s);
-        return studentRepository.save(s);
+        Student student = new Student();
+        copyDtoToEntity(dto, student);
+        return studentRepository.save(student);
     }
 
+    @Transactional
     public Student updateStudent(Long id, StudentDTO dto) {
-        Student s = getStudentById(id);
-        copyDtoToEntity(dto, s);
-        return studentRepository.save(s);
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
+        copyDtoToEntity(dto, student);
+        return studentRepository.save(student);
     }
 
+    @Transactional
     public void deleteStudent(Long id) {
-        if (!studentRepository.existsById(id))
+        if (!studentRepository.existsById(id)) {
             throw new ResourceNotFoundException("Student not found with id: " + id);
+        }
         studentRepository.deleteById(id);
     }
 
-    private void copyDtoToEntity(StudentDTO dto, Student s) {
-        s.setRgNo(dto.getRgNo());
-        s.setName(dto.getName());
-        s.setContact(dto.getContact());
-        s.setEmail(dto.getEmail());
-        s.setGender(dto.getGender());
-        s.setDob(dto.getDob());
+    // Helper to map from Entity to DTO for safe API responses
+    private StudentDTO mapEntityToDto(Student student) {
+        StudentDTO dto = new StudentDTO();
+        dto.setId(student.getId());
+        dto.setRgNo(student.getRgNo());
+        dto.setName(student.getName());
+        dto.setEmail(student.getEmail());
+        dto.setContact(student.getContact());
+        if (student.getDepartment() != null) {
+            dto.setDepartmentName(student.getDepartment().getName());
+        }
+        if (student.getSemester() != null) {
+            dto.setSemesterInfo(student.getSemester().getSno() + " - " + student.getSemester().getStage());
+        }
+        return dto;
+    }
+
+    // Helper to map from DTO to Entity for creating/updating
+    private void copyDtoToEntity(StudentDTO dto, Student student) {
+        student.setRgNo(dto.getRgNo());
+        student.setName(dto.getName());
+        student.setContact(dto.getContact());
+        student.setEmail(dto.getEmail());
+        student.setGender(dto.getGender());
+        student.setDob(dto.getDob());
 
         if (dto.getDepartmentId() != null) {
-            s.setDepartment(departmentRepository.findById(dto.getDepartmentId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Department not found")));
+            student.setDepartment(departmentRepository.findById(dto.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + dto.getDepartmentId())));
         }
         if (dto.getSemesterId() != null) {
-            s.setSemester(semesterRepository.findById(dto.getSemesterId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Semester not found")));
+            student.setSemester(semesterRepository.findById(dto.getSemesterId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Semester not found with id: " + dto.getSemesterId())));
         }
-        if (dto.getSubjectIds() != null) {
-            s.setSubjects(new HashSet<>(sr.findAllById(dto.getSubjectIds())));
+        if (dto.getSubjectIds() != null && !dto.getSubjectIds().isEmpty()) {
+            student.setSubjects(new HashSet<>(subjectRepository.findAllById(dto.getSubjectIds())));
         }
     }
 }

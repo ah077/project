@@ -18,12 +18,12 @@ public class ExamResultController {
     private ExamResultService examResultService;
 
     @GetMapping
-    public List<ExamResult> getAll() {
+    public List<ExamResultDTO> getAll() {
         return examResultService.getAllExamResults();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ExamResult> getOne(@PathVariable Long id) {
+    public ResponseEntity<ExamResultDTO> getOne(@PathVariable Long id) {
         return ResponseEntity.ok(examResultService.getExamResultById(id));
     }
 

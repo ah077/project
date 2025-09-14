@@ -1,27 +1,15 @@
 package com.fsd.project.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "students")
 public class Student {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String rgNo;
@@ -31,54 +19,27 @@ public class Student {
     private String gender;
     private LocalDate dob;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
     @JoinColumn(name = "semester_id")
-    @JsonBackReference
     private Semester semester;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
     @JoinColumn(name = "department_id")
     private Department department;
 
-    // student takes many subjects, subject can be taken by many students -> M:N
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
         name = "student_subject",
         joinColumns = @JoinColumn(name = "student_id"),
         inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    private Set<Subject> subjects;
+    private Set<Subject> subjects = new HashSet<>();
 
-    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
-    @JsonManagedReference("student-examresult") // Named reference
-    private Set<ExamResult> examResults;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ExamResult> examResults = new HashSet<>();
 
-    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
-    @JsonManagedReference("student-finalresult") // New named reference
-    private Set<FinalResult> finalResults;
-
-	public Student() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Student(Long id, String rgNo, String name, String contact, String email, String gender,
-			Semester semester, Department department,LocalDate dob, Set<Subject> subjects, Set<ExamResult> examResults,
-			Set<FinalResult> finalResults) {
-		super();
-		this.id = id;
-		this.rgNo = rgNo;
-		this.name = name;
-		this.contact = contact;
-		this.email = email;
-		this.gender = gender;
-		this.dob = dob;
-		this.semester = semester;
-		this.department = department;
-		this.subjects = subjects;
-		this.examResults = examResults;
-		this.finalResults = finalResults;
-	}
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FinalResult> finalResults = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -175,8 +136,7 @@ public class Student {
 	public void setFinalResults(Set<FinalResult> finalResults) {
 		this.finalResults = finalResults;
 	}
-
-	
-
+    
+    
     
 }

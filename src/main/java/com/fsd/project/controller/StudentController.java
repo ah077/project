@@ -14,26 +14,29 @@ import java.util.List;
 @RequestMapping("/api/v1/students")
 public class StudentController {
 
-    @Autowired private StudentService studentService;
+    @Autowired
+    private StudentService studentService;
 
     @GetMapping
-    public List<Student> getAllStudents() {
+    public List<StudentDTO> getAllStudents() {
         return studentService.getAllStudents();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+    public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody StudentDTO dto) {
-        return new ResponseEntity<>(studentService.createStudent(dto), HttpStatus.CREATED);
+        Student createdStudent = studentService.createStudent(dto);
+        return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody StudentDTO dto) {
-        return ResponseEntity.ok(studentService.updateStudent(id, dto));
+        Student updatedStudent = studentService.updateStudent(id, dto);
+        return ResponseEntity.ok(updatedStudent);
     }
 
     @DeleteMapping("/{id}")
@@ -42,4 +45,3 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 }
-
