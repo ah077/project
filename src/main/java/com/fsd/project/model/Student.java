@@ -43,8 +43,6 @@ public class Student {
     private Set<FinalResult> finalResults = new HashSet<>();
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // ✅ FIX: Added nullable = true to allow a Student record
-    // to exist without a matching User login.
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
 	public Long getId() {

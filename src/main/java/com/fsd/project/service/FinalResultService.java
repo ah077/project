@@ -52,7 +52,6 @@ public class FinalResultService {
         result.setSemester(semester);
 
         FinalResult savedResult = finalResultRepository.save(result);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(savedResult);
     }
 

@@ -24,14 +24,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    // ✅ NEW: This specifically handles "Email already in use" errors
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalState(IllegalStateException ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
         body.put("error", "Bad Request");
-        body.put("message", ex.getMessage()); // This will show "Email already in use"
+        body.put("message", ex.getMessage()); 
         body.put("path", request.getDescription(false));
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }

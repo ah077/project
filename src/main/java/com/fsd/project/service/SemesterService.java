@@ -36,7 +36,6 @@ public class SemesterService {
         s.setStage(dto.getStage());
         s.setEndYear(dto.getEndYear());
         Semester savedSemester = semesterRepository.save(s);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(savedSemester);
     }
 
@@ -48,7 +47,6 @@ public class SemesterService {
         s.setStage(dto.getStage());
         s.setEndYear(dto.getEndYear());
         Semester updatedSemester = semesterRepository.save(s);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(updatedSemester);
     }
 

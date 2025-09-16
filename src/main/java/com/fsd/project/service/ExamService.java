@@ -36,7 +36,6 @@ public class ExamService {
         e.setType(dto.getType());
         e.setTotalMarks(dto.getTotalMarks());
         Exam savedExam = examRepository.save(e);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(savedExam);
     }
 
@@ -49,7 +48,6 @@ public class ExamService {
         e.setType(dto.getType());
         e.setTotalMarks(dto.getTotalMarks());
         Exam updatedExam = examRepository.save(e);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(updatedExam);
     }
 

@@ -37,7 +37,6 @@ public class AssessmentService {
         assessment.setMarks(dto.getMarks());
         assessment.setTotalMarks(dto.getTotalMarks());
         Assessment savedAssessment = assessmentRepository.save(assessment);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(savedAssessment);
     }
 
@@ -50,7 +49,6 @@ public class AssessmentService {
         assessment.setMarks(dto.getMarks());
         assessment.setTotalMarks(dto.getTotalMarks());
         Assessment updatedAssessment = assessmentRepository.save(assessment);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(updatedAssessment);
     }
 

@@ -1,19 +1,16 @@
 package com.fsd.project.dto;
 
 public class StaffDTO {
-    // For Responses
     private Long id;
     private String name;
     private String role;
     private String phone;
     private String address;
-    private String email; // ✅ ADDED THIS FIELD
+    private String email; 
     private String departmentName;
 
-    // For Requests
     private Long departmentId;
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }

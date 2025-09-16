@@ -7,7 +7,7 @@ import java.util.Calendar;
 @Entity
 public class VerificationToken {
 
-    private static final int EXPIRATION = 60 * 24; // 24 hours
+    private static final int EXPIRATION = 60 * 24; 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

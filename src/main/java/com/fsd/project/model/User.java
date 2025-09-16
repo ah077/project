@@ -38,8 +38,6 @@ public class User implements UserDetails {
         ROLE_STUDENT,
         ROLE_STAFF
     }
-    
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getEmail() { return email; }
@@ -50,7 +48,6 @@ public class User implements UserDetails {
     public void setRole(UserRole role) { this.role = role; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
-    // UserDetails interface methods
     @Override public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
     }

@@ -50,7 +50,6 @@ public class ExamResultService {
         result.setStudent(student);
 
         ExamResult savedResult = examResultRepository.save(result);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(savedResult);
     }
 

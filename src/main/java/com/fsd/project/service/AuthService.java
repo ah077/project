@@ -58,7 +58,7 @@ public class AuthService {
             Staff staffProfile = new Staff();
             staffProfile.setName(request.getName());
             staffProfile.setEmail(request.getEmail());
-            staffProfile.setRole(request.getStaffRole()); // ✅ FIX: Set the staff's role from the request
+            staffProfile.setRole(request.getStaffRole()); 
             staffProfile.setUser(user);
             staffRepository.save(staffProfile);
         } else {

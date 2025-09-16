@@ -14,16 +14,15 @@ public class Staff {
     private String phone;
     private String address;
     @Column(unique = true, nullable = false)
-    private String email; // Add the email field
+    private String email; 
 
-    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
+    @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "department_id")
     private Department department;
 
     
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // ✅ FIX: Added nullable = true.
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
 	public Long getId() {

@@ -41,7 +41,6 @@ public class StudentService {
         Student student = new Student();
         copyDtoToEntity(dto, student);
         Student savedStudent = studentRepository.save(student);
-        // ✅ FIX: Map the saved entity to a DTO and return it
         return mapEntityToDto(savedStudent);
     }
 
@@ -51,7 +50,6 @@ public class StudentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
         copyDtoToEntity(dto, student);
         Student updatedStudent = studentRepository.save(student);
-        // ✅ FIX: Map the updated entity to a DTO and return it
         return mapEntityToDto(updatedStudent);
     }
 

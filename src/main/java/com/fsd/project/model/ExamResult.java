@@ -12,11 +12,11 @@ public class ExamResult {
     private Integer marks;
     private String grade;
 
-    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
+    @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "exam_id")
     private Exam exam;
 
-    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
+    @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "student_id")
     private Student student;
 

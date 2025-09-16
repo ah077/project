@@ -4,10 +4,11 @@ public class RegisterRequest {
     private String name;
     private String email;
     private String password;
-    private String role; // "STUDENT" or "STAFF"
-    private String rgNo; // Student-specific
+    private String role; 
+    private String rgNo; 
     private String staffRole; 
-    // Getters and Setters
+
+    
     public String getName() { return name; }
     public String getEmail() { return email; }
     public String getPassword() { return password; }

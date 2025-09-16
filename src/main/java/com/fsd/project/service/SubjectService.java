@@ -37,7 +37,6 @@ public class SubjectService {
         s.setCredits(dto.getCredits());
         s.setDuration(dto.getDuration());
         Subject savedSubject = subjectRepository.save(s);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(savedSubject);
     }
 
@@ -50,7 +49,6 @@ public class SubjectService {
         s.setCredits(dto.getCredits());
         s.setDuration(dto.getDuration());
         Subject updatedSubject = subjectRepository.save(s);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(updatedSubject);
     }
 

@@ -48,7 +48,6 @@ public class DepartmentService {
         d.setIntake(dto.getIntake());
         d.setHod(dto.getHod());
         Department updatedDepartment = departmentRepository.save(d);
-        // ✅ FIX: Return the mapped DTO
         return mapEntityToDto(updatedDepartment);
     }
 

@@ -39,7 +39,7 @@ public class StaffService {
         s.setRole(dto.getRole());
         s.setPhone(dto.getPhone());
         s.setAddress(dto.getAddress());
-        s.setEmail(dto.getEmail()); // ✅ ADDED THIS LINE
+        s.setEmail(dto.getEmail()); 
 
         Department dept = departmentRepository.findById(dto.getDepartmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + dto.getDepartmentId()));
@@ -58,7 +58,7 @@ public class StaffService {
         s.setRole(dto.getRole());
         s.setPhone(dto.getPhone());
         s.setAddress(dto.getAddress());
-        s.setEmail(dto.getEmail()); // ✅ ADDED THIS LINE
+        s.setEmail(dto.getEmail()); 
 
         if (dto.getDepartmentId() != null) {
             Department dept = departmentRepository.findById(dto.getDepartmentId())
@@ -84,7 +84,7 @@ public class StaffService {
         dto.setRole(s.getRole());
         dto.setPhone(s.getPhone());
         dto.setAddress(s.getAddress());
-        dto.setEmail(s.getEmail()); // ✅ ADDED THIS LINE
+        dto.setEmail(s.getEmail()); 
         
         if (s.getDepartment() != null) {
             dto.setDepartmentName(s.getDepartment().getName());
