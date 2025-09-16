@@ -1,7 +1,6 @@
 package com.fsd.project.dto;
 
 public class FinalResultDTO {
-    // For Responses
     private Long id;
     private Integer subTotal;
     private Integer total;
@@ -10,11 +9,9 @@ public class FinalResultDTO {
     private String studentName;
     private String semesterInfo;
 
-    // For Requests
     private Long studentId;
     private Long semesterId;
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Integer getSubTotal() { return subTotal; }

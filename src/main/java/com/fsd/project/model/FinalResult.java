@@ -14,11 +14,11 @@ public class FinalResult {
     private Double percentage;
     private String grade;
 
-    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private Student student;
 
-    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
+    @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "semester_id")
     private Semester semester;
 

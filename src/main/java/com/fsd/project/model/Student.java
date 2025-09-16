@@ -15,15 +15,16 @@ public class Student {
     private String rgNo;
     private String name;
     private String contact;
+    @Column(unique = true, nullable = false)
     private String email;
     private String gender;
     private LocalDate dob;
 
-    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
+    @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "semester_id")
     private Semester semester;
 
-    @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
+    @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "department_id")
     private Department department;
 
@@ -40,7 +41,12 @@ public class Student {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FinalResult> finalResults = new HashSet<>();
-
+    
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // ✅ FIX: Added nullable = true to allow a Student record
+    // to exist without a matching User login.
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
+    private User user;
 	public Long getId() {
 		return id;
 	}
@@ -137,6 +143,7 @@ public class Student {
 		this.finalResults = finalResults;
 	}
     
-    
+	public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
     
 }

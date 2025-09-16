@@ -1,19 +1,16 @@
 package com.fsd.project.controller;
 
 import com.fsd.project.dto.FinalResultDTO;
-import com.fsd.project.model.FinalResult;
 import com.fsd.project.service.FinalResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/finalresults")
 public class FinalResultController {
-
     @Autowired private FinalResultService finalResultService;
 
     @GetMapping
@@ -27,9 +24,9 @@ public class FinalResultController {
     }
 
     @PostMapping
-    public ResponseEntity<FinalResult> create(@RequestBody FinalResultDTO dto) {
-        FinalResult saved = finalResultService.createFinalResult(dto);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    public ResponseEntity<FinalResultDTO> create(@RequestBody FinalResultDTO dto) {
+        FinalResultDTO createdDto = finalResultService.createFinalResult(dto);
+        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

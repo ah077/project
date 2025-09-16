@@ -29,24 +29,28 @@ public class ExamService {
     }
 
     @Transactional
-    public Exam createExam(ExamDTO dto) {
+    public ExamDTO createExam(ExamDTO dto) {
         Exam e = new Exam();
         e.setName(dto.getName());
         e.setDate(dto.getDate());
         e.setType(dto.getType());
         e.setTotalMarks(dto.getTotalMarks());
-        return examRepository.save(e);
+        Exam savedExam = examRepository.save(e);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(savedExam);
     }
 
     @Transactional
-    public Exam updateExam(Long id, ExamDTO dto) {
+    public ExamDTO updateExam(Long id, ExamDTO dto) {
         Exam e = examRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Exam not found with id: " + id));
         e.setName(dto.getName());
         e.setDate(dto.getDate());
         e.setType(dto.getType());
         e.setTotalMarks(dto.getTotalMarks());
-        return examRepository.save(e);
+        Exam updatedExam = examRepository.save(e);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(updatedExam);
     }
 
     @Transactional

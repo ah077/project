@@ -12,14 +12,13 @@ public class Semester {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sno;   // semester number
-    private String stage;   // e.g. "First Year"
-    private Integer endYear; // graduation year
+    private String sno;  
+    private String stage;   
+    private Integer endYear; 
 
     @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Student> students = new HashSet<>();
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getSno() { return sno; }

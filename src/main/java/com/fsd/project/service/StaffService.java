@@ -33,22 +33,24 @@ public class StaffService {
     }
 
     @Transactional
-    public Staff createStaff(StaffDTO dto) {
+    public StaffDTO createStaff(StaffDTO dto) {
         Staff s = new Staff();
         s.setName(dto.getName());
         s.setRole(dto.getRole());
         s.setPhone(dto.getPhone());
         s.setAddress(dto.getAddress());
+        s.setEmail(dto.getEmail()); // ✅ ADDED THIS LINE
 
         Department dept = departmentRepository.findById(dto.getDepartmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + dto.getDepartmentId()));
         s.setDepartment(dept);
 
-        return staffRepository.save(s);
+        Staff savedStaff = staffRepository.save(s);
+        return mapEntityToDto(savedStaff);
     }
 
     @Transactional
-    public Staff updateStaff(Long id, StaffDTO dto) {
+    public StaffDTO updateStaff(Long id, StaffDTO dto) {
         Staff s = staffRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
         
@@ -56,13 +58,15 @@ public class StaffService {
         s.setRole(dto.getRole());
         s.setPhone(dto.getPhone());
         s.setAddress(dto.getAddress());
+        s.setEmail(dto.getEmail()); // ✅ ADDED THIS LINE
 
         if (dto.getDepartmentId() != null) {
             Department dept = departmentRepository.findById(dto.getDepartmentId())
                     .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + dto.getDepartmentId()));
             s.setDepartment(dept);
         }
-        return staffRepository.save(s);
+        Staff updatedStaff = staffRepository.save(s);
+        return mapEntityToDto(updatedStaff);
     }
 
     @Transactional
@@ -80,6 +84,8 @@ public class StaffService {
         dto.setRole(s.getRole());
         dto.setPhone(s.getPhone());
         dto.setAddress(s.getAddress());
+        dto.setEmail(s.getEmail()); // ✅ ADDED THIS LINE
+        
         if (s.getDepartment() != null) {
             dto.setDepartmentName(s.getDepartment().getName());
         }

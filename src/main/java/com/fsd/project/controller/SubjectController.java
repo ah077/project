@@ -1,19 +1,16 @@
 package com.fsd.project.controller;
 
 import com.fsd.project.dto.SubjectDTO;
-import com.fsd.project.model.Subject;
 import com.fsd.project.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/subjects")
 public class SubjectController {
-
     @Autowired private SubjectService subjectService;
 
     @GetMapping
@@ -27,13 +24,15 @@ public class SubjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Subject> create(@RequestBody SubjectDTO dto) {
-        return new ResponseEntity<>(subjectService.createSubject(dto), HttpStatus.CREATED);
+    public ResponseEntity<SubjectDTO> create(@RequestBody SubjectDTO dto) {
+        SubjectDTO createdSubject = subjectService.createSubject(dto);
+        return new ResponseEntity<>(createdSubject, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Subject> update(@PathVariable Long id, @RequestBody SubjectDTO dto) {
-        return ResponseEntity.ok(subjectService.updateSubject(id, dto));
+    public ResponseEntity<SubjectDTO> update(@PathVariable Long id, @RequestBody SubjectDTO dto) {
+        SubjectDTO updatedSubject = subjectService.updateSubject(id, dto);
+        return ResponseEntity.ok(updatedSubject);
     }
 
     @DeleteMapping("/{id}")

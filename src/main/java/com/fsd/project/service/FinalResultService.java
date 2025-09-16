@@ -36,7 +36,7 @@ public class FinalResultService {
     }
 
     @Transactional
-    public FinalResult createFinalResult(FinalResultDTO dto) {
+    public FinalResultDTO createFinalResult(FinalResultDTO dto) {
         FinalResult result = new FinalResult();
         result.setSubTotal(dto.getSubTotal());
         result.setTotal(dto.getTotal());
@@ -51,7 +51,9 @@ public class FinalResultService {
         result.setStudent(student);
         result.setSemester(semester);
 
-        return finalResultRepository.save(result);
+        FinalResult savedResult = finalResultRepository.save(result);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(savedResult);
     }
 
     @Transactional

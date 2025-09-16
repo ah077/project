@@ -30,22 +30,26 @@ public class SemesterService {
     }
 
     @Transactional
-    public Semester createSemester(SemesterDTO dto) {
+    public SemesterDTO createSemester(SemesterDTO dto) {
         Semester s = new Semester();
         s.setSno(dto.getSno());
         s.setStage(dto.getStage());
         s.setEndYear(dto.getEndYear());
-        return semesterRepository.save(s);
+        Semester savedSemester = semesterRepository.save(s);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(savedSemester);
     }
 
     @Transactional
-    public Semester updateSemester(Long id, SemesterDTO dto) {
+    public SemesterDTO updateSemester(Long id, SemesterDTO dto) {
         Semester s = semesterRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Semester not found with id: " + id));
         s.setSno(dto.getSno());
         s.setStage(dto.getStage());
         s.setEndYear(dto.getEndYear());
-        return semesterRepository.save(s);
+        Semester updatedSemester = semesterRepository.save(s);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(updatedSemester);
     }
 
     @Transactional

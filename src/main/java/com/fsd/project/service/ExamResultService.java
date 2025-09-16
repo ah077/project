@@ -36,7 +36,7 @@ public class ExamResultService {
     }
 
     @Transactional
-    public ExamResult createExamResult(ExamResultDTO dto) {
+    public ExamResultDTO createExamResult(ExamResultDTO dto) {
         ExamResult result = new ExamResult();
         result.setMarks(dto.getMarks());
         result.setGrade(dto.getGrade());
@@ -49,7 +49,9 @@ public class ExamResultService {
         result.setExam(exam);
         result.setStudent(student);
 
-        return examResultRepository.save(result);
+        ExamResult savedResult = examResultRepository.save(result);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(savedResult);
     }
 
     @Transactional

@@ -7,6 +7,7 @@ public class StaffDTO {
     private String role;
     private String phone;
     private String address;
+    private String email; // ✅ ADDED THIS FIELD
     private String departmentName;
 
     // For Requests
@@ -23,6 +24,8 @@ public class StaffDTO {
     public void setPhone(String phone) { this.phone = phone; }
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
+    public String getEmail() { return email; } // ✅ ADDED GETTER
+    public void setEmail(String email) { this.email = email; } // ✅ ADDED SETTER
     public String getDepartmentName() { return departmentName; }
     public void setDepartmentName(String departmentName) { this.departmentName = departmentName; }
     public Long getDepartmentId() { return departmentId; }

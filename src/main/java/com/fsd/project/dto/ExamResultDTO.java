@@ -8,11 +8,9 @@ public class ExamResultDTO {
     private String examName;
     private String studentName;
 
-    // For Requests (Creating/Updating)
     private Long examId;
     private Long studentId;
     
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Integer getMarks() { return marks; }

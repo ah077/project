@@ -37,18 +37,22 @@ public class StudentService {
     }
 
     @Transactional
-    public Student createStudent(StudentDTO dto) {
+    public StudentDTO createStudent(StudentDTO dto) {
         Student student = new Student();
         copyDtoToEntity(dto, student);
-        return studentRepository.save(student);
+        Student savedStudent = studentRepository.save(student);
+        // ✅ FIX: Map the saved entity to a DTO and return it
+        return mapEntityToDto(savedStudent);
     }
 
     @Transactional
-    public Student updateStudent(Long id, StudentDTO dto) {
+    public StudentDTO updateStudent(Long id, StudentDTO dto) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
         copyDtoToEntity(dto, student);
-        return studentRepository.save(student);
+        Student updatedStudent = studentRepository.save(student);
+        // ✅ FIX: Map the updated entity to a DTO and return it
+        return mapEntityToDto(updatedStudent);
     }
 
     @Transactional

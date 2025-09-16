@@ -30,24 +30,28 @@ public class AssessmentService {
     }
 
     @Transactional
-    public Assessment createAssessment(AssessmentDTO dto) {
+    public AssessmentDTO createAssessment(AssessmentDTO dto) {
         Assessment assessment = new Assessment();
         assessment.setNumber(dto.getNumber());
         assessment.setDate(dto.getDate());
         assessment.setMarks(dto.getMarks());
         assessment.setTotalMarks(dto.getTotalMarks());
-        return assessmentRepository.save(assessment);
+        Assessment savedAssessment = assessmentRepository.save(assessment);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(savedAssessment);
     }
 
     @Transactional
-    public Assessment updateAssessment(Long id, AssessmentDTO dto) {
+    public AssessmentDTO updateAssessment(Long id, AssessmentDTO dto) {
         Assessment assessment = assessmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Assessment not found with id: " + id));
         assessment.setNumber(dto.getNumber());
         assessment.setDate(dto.getDate());
         assessment.setMarks(dto.getMarks());
         assessment.setTotalMarks(dto.getTotalMarks());
-        return assessmentRepository.save(assessment);
+        Assessment updatedAssessment = assessmentRepository.save(assessment);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(updatedAssessment);
     }
 
     @Transactional

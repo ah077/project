@@ -30,24 +30,28 @@ public class SubjectService {
     }
 
     @Transactional
-    public Subject createSubject(SubjectDTO dto) {
+    public SubjectDTO createSubject(SubjectDTO dto) {
         Subject s = new Subject();
         s.setCode(dto.getCode());
         s.setName(dto.getName());
         s.setCredits(dto.getCredits());
         s.setDuration(dto.getDuration());
-        return subjectRepository.save(s);
+        Subject savedSubject = subjectRepository.save(s);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(savedSubject);
     }
 
     @Transactional
-    public Subject updateSubject(Long id, SubjectDTO dto) {
+    public SubjectDTO updateSubject(Long id, SubjectDTO dto) {
         Subject s = subjectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));
         s.setCode(dto.getCode());
         s.setName(dto.getName());
         s.setCredits(dto.getCredits());
         s.setDuration(dto.getDuration());
-        return subjectRepository.save(s);
+        Subject updatedSubject = subjectRepository.save(s);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(updatedSubject);
     }
 
     @Transactional

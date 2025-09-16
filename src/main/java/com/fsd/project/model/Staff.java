@@ -13,11 +13,19 @@ public class Staff {
     private String role;
     private String phone;
     private String address;
+    @Column(unique = true, nullable = false)
+    private String email; // Add the email field
 
     @ManyToOne(fetch = FetchType.LAZY) // ✅ CLEANUP: Reverted to LAZY
     @JoinColumn(name = "department_id")
     private Department department;
 
+    
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // ✅ FIX: Added nullable = true.
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
+    private User user;
 	public Long getId() {
 		return id;
 	}
@@ -65,6 +73,9 @@ public class Staff {
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
-    
+	public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
     
 }

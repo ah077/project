@@ -30,22 +30,26 @@ public class DepartmentService {
     }
 
     @Transactional
-    public Department createDepartment(DepartmentDTO dto) {
+    public DepartmentDTO createDepartment(DepartmentDTO dto) {
         Department d = new Department();
         d.setName(dto.getName());
         d.setIntake(dto.getIntake());
         d.setHod(dto.getHod());
-        return departmentRepository.save(d);
+        Department savedDepartment = departmentRepository.save(d);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(savedDepartment);
     }
 
     @Transactional
-    public Department updateDepartment(Long id, DepartmentDTO dto) {
+    public DepartmentDTO updateDepartment(Long id, DepartmentDTO dto) {
         Department d = departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + id));
         d.setName(dto.getName());
         d.setIntake(dto.getIntake());
         d.setHod(dto.getHod());
-        return departmentRepository.save(d);
+        Department updatedDepartment = departmentRepository.save(d);
+        // ✅ FIX: Return the mapped DTO
+        return mapEntityToDto(updatedDepartment);
     }
 
     @Transactional

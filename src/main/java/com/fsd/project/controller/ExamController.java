@@ -1,13 +1,11 @@
 package com.fsd.project.controller;
 
 import com.fsd.project.dto.ExamDTO;
-import com.fsd.project.model.Exam;
 import com.fsd.project.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -26,13 +24,15 @@ public class ExamController {
     }
 
     @PostMapping
-    public ResponseEntity<Exam> create(@RequestBody ExamDTO dto) {
-        return new ResponseEntity<>(examService.createExam(dto), HttpStatus.CREATED);
+    public ResponseEntity<ExamDTO> create(@RequestBody ExamDTO dto) {
+        ExamDTO createdExam = examService.createExam(dto);
+        return new ResponseEntity<>(createdExam, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Exam> update(@PathVariable Long id, @RequestBody ExamDTO dto) {
-        return ResponseEntity.ok(examService.updateExam(id, dto));
+    public ResponseEntity<ExamDTO> update(@PathVariable Long id, @RequestBody ExamDTO dto) {
+        ExamDTO updatedExam = examService.updateExam(id, dto);
+        return ResponseEntity.ok(updatedExam);
     }
 
     @DeleteMapping("/{id}")

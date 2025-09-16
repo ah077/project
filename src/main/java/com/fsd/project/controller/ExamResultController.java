@@ -1,19 +1,16 @@
 package com.fsd.project.controller;
 
 import com.fsd.project.dto.ExamResultDTO;
-import com.fsd.project.model.ExamResult;
 import com.fsd.project.service.ExamResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/examresults")
 public class ExamResultController {
-
     @Autowired private ExamResultService examResultService;
 
     @GetMapping
@@ -27,9 +24,9 @@ public class ExamResultController {
     }
 
     @PostMapping
-    public ResponseEntity<ExamResult> create(@RequestBody ExamResultDTO dto) {
-        ExamResult saved = examResultService.createExamResult(dto);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    public ResponseEntity<ExamResultDTO> create(@RequestBody ExamResultDTO dto) {
+        ExamResultDTO createdDto = examResultService.createExamResult(dto);
+        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

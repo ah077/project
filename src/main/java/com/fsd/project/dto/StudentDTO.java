@@ -3,9 +3,7 @@ package com.fsd.project.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-// This DTO is used for both creating/updating and for API responses.
 public class StudentDTO {
-    // For Responses
     private Long id;
     private String rgNo;
     private String name;
@@ -16,12 +14,10 @@ public class StudentDTO {
     private String departmentName;
     private String semesterInfo;
 
-    // For Requests (Creating/Updating)
     private Long departmentId;
     private Long semesterId;
     private List<Long> subjectIds;
 
-    // Getters and Setters for all fields...
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getRgNo() { return rgNo; }
